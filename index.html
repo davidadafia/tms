@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>UCOFF YOUTH</title>
+<title>Topical Memory Flashcards — Dark Mode</title>
 <style>
 /* === Apple-inspired dark theme === */
 :root {
@@ -56,6 +56,7 @@ select, input {
   color: var(--text);
   font-size: 0.9rem;
   flex: 1;
+  min-width: 160px;
   transition: border 0.2s;
 }
 select:focus, input:focus {
@@ -152,7 +153,7 @@ footer {
 </style>
 </head>
 <body>
-<h1>UCOFF YOUTH TMS — Flashcards (NIV)</h1>
+<h1>Topical Memory System — Flashcards</h1>
 <p>Tap or click a card to flip and reveal the scripture text.</p>
 <div class="controls">
   <select id="groupSelect">
@@ -163,90 +164,405 @@ footer {
     <option value="D">D: Being Christ’s Disciple</option>
     <option value="E">E: Growth In Christlikeness</option>
   </select>
+  <select id="versionSelect">
+    <option value="niv">NIV</option>
+    <option value="kjv">KJV</option>
+    <option value="amp">Amplified</option>
+  </select>
   <input type="text" id="search" placeholder="Search topics or verses...">
   <button id="reset">Reset</button>
 </div>
 <div id="grid" class="grid"></div>
-<footer>Dark mode • Apple-inspired design • Full NIV verses included.</footer>
+<footer>Dark mode • Apple-inspired design • NIV, KJV & Amplified versions included.</footer>
+
 <script>
 const scriptures = [
-  // A: Living The New Life
-  { group: 'A', topic: 'Christ the Center', ref: '2 Corinthians 5:17', text: 'Therefore, if anyone is in Christ, the new creation has come: The old has gone, the new is here!' },
-  { group: 'A', topic: 'Christ the Center', ref: 'Galatians 2:20', text: 'I have been crucified with Christ and I no longer live, but Christ lives in me. The life I now live in the body, I live by faith in the Son of God, who loved me and gave himself for me.' },
-  { group: 'A', topic: 'Obedience to Christ', ref: 'Romans 12:1', text: 'Therefore, I urge you, brothers and sisters, in view of God’s mercy, to offer your bodies as a living sacrifice, holy and pleasing to God—this is your true and proper worship.' },
-  { group: 'A', topic: 'Obedience to Christ', ref: 'John 14:21', text: 'Whoever has my commands and keeps them is the one who loves me. The one who loves me will be loved by my Father, and I too will love them and show myself to them.' },
-  { group: 'A', topic: 'The Word', ref: '2 Timothy 3:16', text: 'All Scripture is God-breathed and is useful for teaching, rebuking, correcting and training in righteousness,' },
-  { group: 'A', topic: 'The Word', ref: 'Joshua 1:8', text: 'Keep this Book of the Law always on your lips; meditate on it day and night, so that you may be careful to do everything written in it. Then you will be prosperous and successful.' },
-  { group: 'A', topic: 'Prayer', ref: 'John 15:7', text: 'If you remain in me and my words remain in you, ask whatever you wish, and it will be done for you.' },
-  { group: 'A', topic: 'Prayer', ref: 'Philippians 4:6,7', text: 'Do not be anxious about anything, but in every situation, by prayer and petition, with thanksgiving, present your requests to God. And the peace of God, which transcends all understanding, will guard your hearts and your minds in Christ Jesus.' },
-  { group: 'A', topic: 'Fellowship', ref: 'Matthew 18:20', text: 'For where two or three gather in my name, there am I with them.' },
-  { group: 'A', topic: 'Fellowship', ref: 'Hebrews 10:24,25', text: 'And let us consider how we may spur one another on toward love and good deeds, not giving up meeting together, as some are in the habit of doing, but encouraging one another—and all the more as you see the Day approaching.' },
-  { group: 'A', topic: 'Witnessing', ref: 'Matthew 4:19', text: '“Come, follow me,” Jesus said, “and I will send you out to fish for people.”' },
-  { group: 'A', topic: 'Witnessing', ref: 'Romans 1:16', text: 'For I am not ashamed of the gospel, because it is the power of God that brings salvation to everyone who believes: first to the Jew, then to the Gentile.' },
+  // === A: Living The New Life ===
+  {
+    group: 'A', topic: 'Christ the Center', ref: '2 Corinthians 5:17',
+    niv: 'Therefore, if anyone is in Christ, the new creation has come: The old has gone, the new is here!',
+    kjv: 'Therefore if any man be in Christ, he is a new creature: old things are passed away; behold, all things are become new.',
+    amp: 'Therefore if anyone is in Christ [that is, grafted in, joined to Him by faith in Him as Savior], he is a new creature [reborn and renewed by the Holy Spirit]; the old things [the previous moral and spiritual condition] have passed away. Behold, new things have come [because spiritual awakening brings a new life].'
+  },
+  {
+    group: 'A', topic: 'Christ the Center', ref: 'Galatians 2:20',
+    niv: 'I have been crucified with Christ and I no longer live, but Christ lives in me. The life I now live in the body, I live by faith in the Son of God, who loved me and gave himself for me.',
+    kjv: 'I am crucified with Christ: nevertheless I live; yet not I, but Christ liveth in me: and the life which I now live in the flesh I live by the faith of the Son of God, who loved me, and gave himself for me.',
+    amp: 'I have been crucified with Christ [that is, in Him I have shared His crucifixion]; it is no longer I who live, but Christ lives in me. The life I now live in the body I live by faith [by adhering to, relying on, and completely trusting] in the Son of God, who loved me and gave Himself up for me.'
+  },
+  {
+    group: 'A', topic: 'Obedience to Christ', ref: 'Romans 12:1',
+    niv: 'Therefore, I urge you, brothers and sisters, in view of God’s mercy, to offer your bodies as a living sacrifice, holy and pleasing to God—this is your true and proper worship.',
+    kjv: 'I beseech you therefore, brethren, by the mercies of God, that ye present your bodies a living sacrifice, holy, acceptable unto God, which is your reasonable service.',
+    amp: 'Therefore I urge you, brothers and sisters, by the mercies of God, to present your bodies [dedicating all of yourselves, set apart] as a living sacrifice, holy and well-pleasing to God, which is your rational (logical, intelligent) act of worship.'
+  },
+  {
+    group: 'A', topic: 'Obedience to Christ', ref: 'John 14:21',
+    niv: 'Whoever has my commands and keeps them is the one who loves me. The one who loves me will be loved by my Father, and I too will love them and show myself to them.',
+    kjv: 'He that hath my commandments, and keepeth them, he it is that loveth me: and he that loveth me shall be loved of my Father, and I will love him, and will manifest myself to him.',
+    amp: 'The person who has My commandments and keeps them is the one who [really] loves Me; and whoever [really] loves Me will be loved by My Father, and I will love him and reveal Myself to him [I will make Myself real to him].'
+  },
+  {
+    group: 'A', topic: 'The Word', ref: '2 Timothy 3:16',
+    niv: 'All Scripture is God-breathed and is useful for teaching, rebuking, correcting and training in righteousness,',
+    kjv: 'All scripture is given by inspiration of God, and is profitable for doctrine, for reproof, for correction, for instruction in righteousness:',
+    amp: 'All Scripture is God-breathed [given by divine inspiration] and is profitable for instruction, for conviction [of sin], for correction [of error and restoration to obedience], for training in righteousness [learning to live in conformity to God’s will, both publicly and privately—behaving honorably with personal integrity and moral courage];'
+  },
+  {
+    group: 'A', topic: 'The Word', ref: 'Joshua 1:8',
+    niv: 'Keep this Book of the Law always on your lips; meditate on it day and night, so that you may be careful to do everything written in it. Then you will be prosperous and successful.',
+    kjv: 'This book of the law shall not depart out of thy mouth; but thou shalt meditate therein day and night, that thou mayest observe to do according to all that is written therein: for then thou shalt make thy way prosperous, and then thou shalt have good success.',
+    amp: 'This Book of the Law shall not depart from your mouth, but you shall read [and meditate on] it day and night, so that you may be careful to do [everything] in accordance with all that is written in it; for then you will make your way prosperous, and then you will be successful.'
+  },
+  {
+    group: 'A', topic: 'Prayer', ref: 'John 15:7',
+    niv: 'If you remain in me and my words remain in you, ask whatever you wish, and it will be done for you.',
+    kjv: 'If ye abide in me, and my words abide in you, ye shall ask what ye will, and it shall be done unto you.',
+    amp: 'If you remain in Me and My words remain in you [that is, if we are vitally united and My message lives in your heart], ask whatever you wish and it will be done for you.'
+  },
+  {
+    group: 'A', topic: 'Prayer', ref: 'Philippians 4:6,7',
+    niv: 'Do not be anxious about anything, but in every situation, by prayer and petition, with thanksgiving, present your requests to God. And the peace of God, which transcends all understanding, will guard your hearts and your minds in Christ Jesus.',
+    kjv: 'Be careful for nothing; but in every thing by prayer and supplication with thanksgiving let your requests be made known unto God. And the peace of God, which passeth all understanding, shall keep your hearts and minds through Christ Jesus.',
+    amp: 'Do not be anxious or worried about anything, but in everything [every circumstance and situation] by prayer and petition with thanksgiving, continue to make your [specific] requests known to God. And the peace of God [that peace which reassures the heart, that peace] which transcends all understanding, [that peace which] stands guard over your hearts and your minds in Christ Jesus [is yours].'
+  },
+  {
+    group: 'A', topic: 'Fellowship', ref: 'Matthew 18:20',
+    niv: 'For where two or three gather in my name, there am I with them.',
+    kjv: 'For where two or three are gathered together in my name, there am I in the midst of them.',
+    amp: 'For where two or three are gathered in My name [meeting together as My followers], there I am in the midst of them.'
+  },
+  {
+    group: 'A', topic: 'Fellowship', ref: 'Hebrews 10:24,25',
+    niv: 'And let us consider how we may spur one another on toward love and good deeds, not giving up meeting together, as some are in the habit of doing, but encouraging one another—and all the more as you see the Day approaching.',
+    kjv: 'And let us consider one another to provoke unto love and to good works: Not forsaking the assembling of ourselves together, as the manner of some is; but exhorting one another: and so much the more, as ye see the day approaching.',
+    amp: 'Let us consider [thoughtfully] how we may encourage one another to love and to do good deeds, not forsaking our meeting together [as believers for worship and instruction], as is the habit of some, but encouraging one another; and all the more [faithfully] as you see the day [of Christ’s return] approaching.'
+  },
+  {
+    group: 'A', topic: 'Witnessing', ref: 'Matthew 4:19',
+    niv: '“Come, follow me,” Jesus said, “and I will send you out to fish for people.”',
+    kjv: 'And he saith unto them, Follow me, and I will make you fishers of men.',
+    amp: 'And He said to them, “Follow Me [as My disciples, accepting Me as your Master and Teacher and walking the same path of life that I walk], and I will make you fishers of men.”'
+  },
+  {
+    group: 'A', topic: 'Witnessing', ref: 'Romans 1:16',
+    niv: 'For I am not ashamed of the gospel, because it is the power of God that brings salvation to everyone who believes: first to the Jew, then to the Gentile.',
+    kjv: 'For I am not ashamed of the gospel of Christ: for it is the power of God unto salvation to every one that believeth; to the Jew first, and also to the Greek.',
+    amp: 'I am not ashamed of the gospel, for it is the power of God for salvation [from His wrath and punishment] to everyone who believes [in Christ as Savior], to the Jew first and also to the Greek.'
+  },
 
-  // B: Proclaiming Christ
-  { group: 'B', topic: 'All Have Sinned', ref: 'Romans 3:23', text: 'for all have sinned and fall short of the glory of God,' },
-  { group: 'B', topic: 'All Have Sinned', ref: 'Isaiah 53:6', text: 'We all, like sheep, have gone astray, each of us has turned to our own way; and the Lord has laid on him the iniquity of us all.' },
-  { group: 'B', topic: 'Sin’s Penalty', ref: 'Romans 6:23', text: 'For the wages of sin is death, but the gift of God is eternal life in Christ Jesus our Lord.' },
-  { group: 'B', topic: 'Sin’s Penalty', ref: 'Hebrews 9:27', text: 'Just as people are destined to die once, and after that to face judgment,' },
-  { group: 'B', topic: 'Christ Paid the Penalty', ref: 'Romans 5:8', text: 'But God demonstrates his own love for us in this: While we were still sinners, Christ died for us.' },
-  { group: 'B', topic: 'Christ Paid the Penalty', ref: '1 Peter 3:18', text: 'For Christ also suffered once for sins, the righteous for the unrighteous, to bring you to God. He was put to death in the body but made alive in the Spirit.' },
-  { group: 'B', topic: 'Salvation is not by Works', ref: 'Ephesians 2:8,9', text: 'For it is by grace you have been saved, through faith—and this is not from yourselves, it is the gift of God—not by works, so that no one can boast.' },
-  { group: 'B', topic: 'Salvation is not by Works', ref: 'Titus 3:5', text: 'he saved us, not because of righteous things we had done, but because of his mercy. He saved us through the washing of rebirth and renewal by the Holy Spirit,' },
-  { group: 'B', topic: 'Must Receive Christ', ref: 'John 1:12', text: 'Yet to all who did receive him, to those who believed in his name, he gave the right to become children of God—' },
-  { group: 'B', topic: 'Must Receive Christ', ref: 'Revelation 3:20', text: 'Here I am! I stand at the door and knock. If anyone hears my voice and opens the door, I will come in and eat with that person, and they with me.' },
-  { group: 'B', topic: 'Assurance of Salvation', ref: '1 John 5:13', text: 'I write these things to you who believe in the name of the Son of God so that you may know that you have eternal life.' },
-  { group: 'B', topic: 'Assurance of Salvation', ref: 'John 5:24', text: '“Very truly I tell you, whoever hears my word and believes him who sent me has eternal life and will not be judged but has crossed over from death to life.' },
+  // === B: Proclaiming Christ ===
+  {
+    group: 'B', topic: 'All Have Sinned', ref: 'Romans 3:23',
+    niv: 'for all have sinned and fall short of the glory of God,',
+    kjv: 'For all have sinned, and come short of the glory of God;',
+    amp: 'since all have sinned and continually fall short of the glory of God,'
+  },
+  {
+    group: 'B', topic: 'All Have Sinned', ref: 'Isaiah 53:6',
+    niv: 'We all, like sheep, have gone astray, each of us has turned to our own way; and the Lord has laid on him the iniquity of us all.',
+    kjv: 'All we like sheep have gone astray; we have turned every one to his own way; and the Lord hath laid on him the iniquity of us all.',
+    amp: 'All of us like sheep have gone astray, we have turned, each one, to his own way; but the Lord has caused the wickedness of us all [our sin, our injustice, our wrongdoing] to fall on Him [instead of us].'
+  },
+  {
+    group: 'B', topic: 'Sin’s Penalty', ref: 'Romans 6:23',
+    niv: 'For the wages of sin is death, but the gift of God is eternal life in Christ Jesus our Lord.',
+    kjv: 'For the wages of sin is death; but the gift of God is eternal life through Jesus Christ our Lord.',
+    amp: 'For the wages of sin is death, but the free gift of God [that is, His remarkable, overwhelming gift of grace to believers] is eternal life in Christ Jesus our Lord.'
+  },
+  {
+    group: 'B', topic: 'Sin’s Penalty', ref: 'Hebrews 9:27',
+    niv: 'Just as people are destined to die once, and after that to face judgment,',
+    kjv: 'And as it is appointed unto men once to die, but after this the judgment:',
+    amp: 'And just as it is appointed and destined for all men to die once and after this [comes certain] judgment,'
+  },
+  {
+    group: 'B', topic: 'Christ Paid the Penalty', ref: 'Romans 5:8',
+    niv: 'But God demonstrates his own love for us in this: While we were still sinners, Christ died for us.',
+    kjv: 'But God commendeth his love toward us, in that, while we were yet sinners, Christ died for us.',
+    amp: 'But God clearly shows and proves His own love for us, by the fact that while we were still sinners, Christ died for us.'
+  },
+  {
+    group: 'B', topic: 'Christ Paid the Penalty', ref: '1 Peter 3:18',
+    niv: 'For Christ also suffered once for sins, the righteous for the unrighteous, to bring you to God. He was put to death in the body but made alive in the Spirit.',
+    kjv: 'For Christ also hath once suffered for sins, the just for the unjust, that he might bring us to God, being put to death in the flesh, but quickened by the Spirit:',
+    amp: 'For indeed Christ died for sins once for all, the Just and Righteous for the unjust and unrighteous [the Innocent for the guilty], so that He might bring us to God, having been put to death in the flesh, but made alive in the Spirit;'
+  },
+  {
+    group: 'B', topic: 'Salvation is not by Works', ref: 'Ephesians 2:8,9',
+    niv: 'For it is by grace you have been saved, through faith—and this is not from yourselves, it is the gift of God—not by works, so that no one can boast.',
+    kjv: 'For by grace are ye saved through faith; and that not of yourselves: it is the gift of God: Not of works, lest any man should boast.',
+    amp: 'For it is by grace [God’s remarkable compassion and favor drawing you to Christ] that you have been saved [actually delivered from judgment and given eternal life] through faith. And this [salvation] is not of yourselves [not through your own effort], but it is the [undeserved, gracious] gift of God; not as a result of [your] works [nor your attempts to keep the Law], so that no one will [be able to] boast or take credit in any way [for his salvation].'
+  },
+  {
+    group: 'B', topic: 'Salvation is not by Works', ref: 'Titus 3:5',
+    niv: 'he saved us, not because of righteous things we had done, but because of his mercy. He saved us through the washing of rebirth and renewal by the Holy Spirit,',
+    kjv: 'Not by works of righteousness which we have done, but according to his mercy he saved us, by the washing of regeneration, and renewing of the Holy Ghost;',
+    amp: 'He saved us, not because of any works of righteousness that we have done, but because of His own compassion and mercy, by the cleansing of the new birth (spiritual transformation, regeneration) and renewing by the Holy Spirit,'
+  },
+  {
+    group: 'B', topic: 'Must Receive Christ', ref: 'John 1:12',
+    niv: 'Yet to all who did receive him, to those who believed in his name, he gave the right to become children of God—',
+    kjv: 'But as many as received him, to them gave he power to become the sons of God, even to them that believe on his name:',
+    amp: 'But to as many as did receive and welcome Him, He gave the right [the authority, the privilege] to become children of God, that is, to those who believe in (adhere to, trust in, and rely on) His name—'
+  },
+  {
+    group: 'B', topic: 'Must Receive Christ', ref: 'Revelation 3:20',
+    niv: 'Here I am! I stand at the door and knock. If anyone hears my voice and opens the door, I will come in and eat with that person, and they with me.',
+    kjv: 'Behold, I stand at the door, and knock: if any man hear my voice, and open the door, I will come in to him, and will sup with him, and he with me.',
+    amp: 'Behold, I stand at the door [of the church] and continually knock. If anyone hears My voice and opens the door, I will come in and eat with him (restore him), and he with Me.'
+  },
+  {
+    group: 'B', topic: 'Assurance of Salvation', ref: '1 John 5:13',
+    niv: 'I write these things to you who believe in the name of the Son of God so that you may know that you have eternal life.',
+    kjv: 'These things have I written unto you that believe on the name of the Son of God; that ye may know that ye have eternal life, and that ye may believe on the name of the Son of God.',
+    amp: 'These things I have written to you who believe in the name of the Son of God [which represents all that Jesus Christ is and does], so that you may know [with settled and absolute knowledge] that you [already] have eternal life.'
+  },
+  {
+    group: 'B', topic: 'Assurance of Salvation', ref: 'John 5:24',
+    niv: '“Very truly I tell you, whoever hears my word and believes him who sent me has eternal life and will not be judged but has crossed over from death to life.',
+    kjv: 'Verily, verily, I say unto you, He that heareth my word, and believeth on him that sent me, hath everlasting life, and shall not come into condemnation; but is passed from death unto life.',
+    amp: '“I assure you and most solemnly say to you, the person who hears My word [the one who heeds My message], and believes and trusts in Him who sent Me, has (possesses now) eternal life [that is, eternal life actually begins—the believer is transformed], and does not come into judgment and condemnation, but has passed [over] from death into life.”'
+  },
 
-  // C: Reliance On God’s Resources
-  { group: 'C', topic: 'His Spirit', ref: '1 Corinthians 3:16', text: 'Don’t you know that you yourselves are God’s temple and that God’s Spirit dwells in your midst?' },
-  { group: 'C', topic: 'His Spirit', ref: '1 Corinthians 2:12', text: 'What we have received is not the spirit of the world, but the Spirit who is from God, so that we may understand what God has freely given us.' },
-  { group: 'C', topic: 'His Strength', ref: 'Isaiah 41:10', text: 'So do not fear, for I am with you; do not be dismayed, for I am your God. I will strengthen you and help you; I will uphold you with my righteous right hand.' },
-  { group: 'C', topic: 'His Strength', ref: 'Philippians 4:13', text: 'I can do all this through him who gives me strength.' },
-  { group: 'C', topic: 'His Faithfulness', ref: 'Lamentations 3:22,23', text: 'Because of the Lord’s great love we are not consumed, for his compassions never fail. They are new every morning; great is your faithfulness.' },
-  { group: 'C', topic: 'His Faithfulness', ref: 'Numbers 23:19', text: 'God is not human, that he should lie, not a human being, that he should change his mind. Does he speak and then not act? Does he promise and not fulfill?' },
-  { group: 'C', topic: 'His Peace', ref: 'Isaiah 26:3', text: 'You will keep in perfect peace those whose minds are steadfast, because they trust in you.' },
-  { group: 'C', topic: 'His Peace', ref: '1 Peter 5:7', text: 'Cast all your anxiety on him because he cares for you.' },
-  { group: 'C', topic: 'His Provision', ref: 'Romans 8:32', text: 'He who did not spare his own Son, but gave him up for us all—how will he not also, along with him, graciously give us all things?' },
-  { group: 'C', topic: 'His Provision', ref: 'Philippians 4:19', text: 'And my God will meet all your needs according to the riches of his glory in Christ Jesus.' },
-  { group: 'C', topic: 'His Help in Temptation', ref: 'Hebrews 2:18', text: 'Because he himself suffered when he was tempted, he is able to help those who are being tempted.' },
-  { group: 'C', topic: 'His Help in Temptation', ref: 'Psalms 119:9,11', text: 'How can a young person stay on the path of purity? By living according to your word.\nI have hidden your word in my heart that I might not sin against you.' },
+  // === C: Reliance On God’s Resources ===
+  {
+    group: 'C', topic: 'His Spirit', ref: '1 Corinthians 3:16',
+    niv: 'Don’t you know that you yourselves are God’s temple and that God’s Spirit dwells in your midst?',
+    kjv: 'Know ye not that ye are the temple of God, and that the Spirit of God dwelleth in you?',
+    amp: 'Do you not know and understand that you [the church] are the temple of God, and that the Spirit of God dwells [permanently] in you [collectively and individually]?'
+  },
+  {
+    group: 'C', topic: 'His Spirit', ref: '1 Corinthians 2:12',
+    niv: 'What we have received is not the spirit of the world, but the Spirit who is from God, so that we may understand what God has freely given us.',
+    kjv: 'Now we have received, not the spirit of the world, but the spirit which is of God; that we might know the things that are freely given to us of God.',
+    amp: 'Now we have received, not the spirit of the world, but the [Holy] Spirit who is from God, so that we may know and understand the [wonderful] things freely given to us by God.'
+  },
+  {
+    group: 'C', topic: 'His Strength', ref: 'Isaiah 41:10',
+    niv: 'So do not fear, for I am with you; do not be dismayed, for I am your God. I will strengthen you and help you; I will uphold you with my righteous right hand.',
+    kjv: 'Fear thou not; for I am with thee: be not dismayed; for I am thy God: I will strengthen thee; yea, I will help thee; yea, I will uphold thee with the right hand of my righteousness.',
+    amp: '‘Do not fear [anything], for I am with you; do not be afraid, for I am your God. I will strengthen you, be assured I will help you; I will certainly take hold of you with My righteous right hand [a hand of justice, of power, of victory, of salvation].’'
+  },
+  {
+    group: 'C', topic: 'His Strength', ref: 'Philippians 4:13',
+    niv: 'I can do all this through him who gives me strength.',
+    kjv: 'I can do all things through Christ which strengtheneth me.',
+    amp: 'I can do all things [which He has called me to do] through Him who strengthens and empowers me [to fulfill His purpose—I am self-sufficient in Christ’s sufficiency; I am ready for anything and equal to anything through Him who infuses me with inner strength and confident peace].'
+  },
+  {
+    group: 'C', topic: 'His Faithfulness', ref: 'Lamentations 3:22,23',
+    niv: 'Because of the Lord’s great love we are not consumed, for his compassions never fail. They are new every morning; great is your faithfulness.',
+    kjv: 'It is of the Lord\'s mercies that we are not consumed, because his compassions fail not. They are new every morning: great is thy faithfulness.',
+    amp: 'It is because of the Lord’s lovingkindnesses that we are not consumed, because His [tender] compassions never fail. They are new every morning; great and beyond measure is Your faithfulness.'
+  },
+  {
+    group: 'C', topic: 'His Faithfulness', ref: 'Numbers 23:19',
+    niv: 'God is not human, that he should lie, not a human being, that he should change his mind. Does he speak and then not act? Does he promise and not fulfill?',
+    kjv: 'God is not a man, that he should lie; neither the son of man, that he should repent: hath he said, and shall he not do it? or hath he spoken, and shall he not make it good?',
+    amp: '“God is not a man, that He should lie, nor a son of man, that He should repent. Has He said, and will He not do it? Or has He spoken, and will He not make it good?'
+  },
+  {
+    group: 'C', topic: 'His Peace', ref: 'Isaiah 26:3',
+    niv: 'You will keep in perfect peace those whose minds are steadfast, because they trust in you.',
+    kjv: 'Thou wilt keep him in perfect peace, whose mind is stayed on thee: because he trusteth in thee.',
+    amp: '“You will keep in perfect and constant peace the one whose mind is steadfast [that is, committed and focused on You—in both inclination and character], because he trusts and takes refuge in You [with hope and confident expectation].'
+  },
+  {
+    group: 'C', topic: 'His Peace', ref: '1 Peter 5:7',
+    niv: 'Cast all your anxiety on him because he cares for you.',
+    kjv: 'Casting all your care upon him; for he careth for you.',
+    amp: 'casting all your cares [all your anxieties, all your worries, and all your concerns, once and for all] on Him, for He cares about you [with deepest affection, and watches over you very carefully].'
+  },
+  {
+    group: 'C', topic: 'His Provision', ref: 'Romans 8:32',
+    niv: 'He who did not spare his own Son, but gave him up for us all—how will he not also, along with him, graciously give us all things?',
+    kjv: 'He that spared not his own Son, but delivered him up for us all, how shall he not with him also freely give us all things?',
+    amp: 'He who did not spare [even] His own Son, but gave Him up for us all, how will He not also, along with Him, graciously give us all things?'
+  },
+  {
+    group: 'C', topic: 'His Provision', ref: 'Philippians 4:19',
+    niv: 'And my God will meet all your needs according to the riches of his glory in Christ Jesus.',
+    kjv: 'But my God shall supply all your need according to his riches in glory by Christ Jesus.',
+    amp: 'And my God will liberally supply (fill until full) your every need according to His riches in glory in Christ Jesus.'
+  },
+  {
+    group: 'C', topic: 'His Help in Temptation', ref: 'Hebrews 2:18',
+    niv: 'Because he himself suffered when he was tempted, he is able to help those who are being tempted.',
+    kjv: 'For in that he himself hath suffered being tempted, he is able to succour them that are tempted.',
+    amp: 'Because He Himself [in His humanity] has suffered in passing through temptation, He is able [exceedingly] to help and provide support for those who are being tempted.'
+  },
+  {
+    group: 'C', topic: 'His Help in Temptation', ref: 'Psalms 119:9,11',
+    niv: 'How can a young person stay on the path of purity? By living according to your word.\nI have hidden your word in my heart that I might not sin against you.',
+    kjv: 'Wherewithal shall a young man cleanse his way? by taking heed thereto according to thy word.\nThy word have I hid in mine heart, that I might not sin against thee.',
+    amp: 'How can a young man keep his way pure? By keeping watch [on himself] according to Your word [conforming his life to it].\nYour word I have treasured and stored in my heart, that I may not sin against You.'
+  },
 
-  // D: Being Christ’s Disciple
-  { group: 'D', topic: 'Put Christ First', ref: 'Matthew 6:33', text: 'But seek first his kingdom and his righteousness, and all these things will be given to you as well.' },
-  { group: 'D', topic: 'Put Christ First', ref: 'Luke 9:23', text: 'Then he said to them all: “Whoever wants to be my disciple must deny themselves and take up their cross daily and follow me.' },
-  { group: 'D', topic: 'Separate From the World', ref: '1 John 2:15,16', text: 'Do not love the world or anything in the world. If anyone loves the world, love for the Father is not in them. For everything in the world—the lust of the flesh, the lust of the eyes, and the pride of life—comes not from the Father but from the world.' },
-  { group: 'D', topic: 'Separate From the World', ref: 'Romans 12:2', text: 'Do not conform to the pattern of this world, but be transformed by the renewing of your mind. Then you will be able to test and approve what God’s will is—his good, pleasing and perfect will.' },
-  { group: 'D', topic: 'Be Steadfast', ref: '1 Corinthians 15:58', text: 'Therefore, my dear brothers and sisters, stand firm. Let nothing move you. Always give yourselves fully to the work of the Lord, because you know that your labor in the Lord is not in vain.' },
-  { group: 'D', topic: 'Be Steadfast', ref: 'Hebrews 12:3', text: 'Consider him who endured such opposition from sinners, so that you will not grow weary and lose heart.' },
-  { group: 'D', topic: 'Serve Others', ref: 'Mark 10:45', text: 'For even the Son of Man did not come to be served, but to serve, and to give his life as a ransom for many.' },
-  { group: 'D', topic: 'Serve Others', ref: '2 Corinthians 4:5', text: 'For what we preach is not ourselves, but Jesus Christ as Lord, and ourselves as your servants for Jesus’ sake.' },
-  { group: 'D', topic: 'Give Generously', ref: 'Proverbs 3:9,10', text: 'Honor the Lord with your wealth, with the firstfruits of all your crops; then your barns will be filled to overflowing, and your vats will brim over with new wine.' },
-  { group: 'D', topic: 'Give Generously', ref: '2 Corinthians 9:6,7', text: 'Remember this: Whoever sows sparingly will also reap sparingly, and whoever sows generously will also reap generously. Each of you should give what you have decided in your heart to give, not reluctantly or under compulsion, for God loves a cheerful giver.' },
-  { group: 'D', topic: 'Develop World Vision', ref: 'Acts 1:8', text: 'But you will receive power when the Holy Spirit comes on you; and you will be my witnesses in Jerusalem, and in all Judea and Samaria, and to the ends of the earth.' },
-  { group: 'D', topic: 'Develop World Vision', ref: 'Matthew 28:19,20', text: 'Therefore go and make disciples of all nations, baptizing them in the name of the Father and of the Son and of the Holy Spirit, and teaching them to obey everything I have commanded you. And surely I am with you always, to the very end of the age.' },
+  // === D: Being Christ’s Disciple ===
+  {
+    group: 'D', topic: 'Put Christ First', ref: 'Matthew 6:33',
+    niv: 'But seek first his kingdom and his righteousness, and all these things will be given to you as well.',
+    kjv: 'But seek ye first the kingdom of God, and his righteousness; and all these things shall be added unto you.',
+    amp: 'But first and most importantly seek (aim at, strive after) His kingdom and His righteousness [His way of doing and being right—the attitude and character of God], and all these things will be given to you also.'
+  },
+  {
+    group: 'D', topic: 'Put Christ First', ref: 'Luke 9:23',
+    niv: 'Then he said to them all: “Whoever wants to be my disciple must deny themselves and take up their cross daily and follow me.',
+    kjv: 'And he said to them all, If any man will come after me, let him deny himself, and take up his cross daily, and follow me.',
+    amp: 'And He was saying to them all, “If anyone wishes to follow Me [as My disciple], he must deny himself [set aside selfish interests], and take up his cross daily [expressing a willingness to endure whatever may come] and follow Me [believing in Me, conforming to My example in living and, if need be, suffering or perhaps dying because of faith in Me].'
+  },
+  {
+    group: 'D', topic: 'Separate From the World', ref: '1 John 2:15,16',
+    niv: 'Do not love the world or anything in the world. If anyone loves the world, love for the Father is not in them. For everything in the world—the lust of the flesh, the lust of the eyes, and the pride of life—comes not from the Father but from the world.',
+    kjv: 'Love not the world, neither the things that are in the world. If any man love the world, the love of the Father is not in him. For all that is in the world, the lust of the flesh, and the lust of the eyes, and the pride of life, is not of the Father, but is of the world.',
+    amp: 'Do not love the world [of sin that opposes God and His precepts], nor the things that are in the world. If anyone loves the world, the love of the Father is not in him. For all that is in the world—the lust and sensual craving of the flesh and the lust and longing of the eyes and the boastful pride of life [pretentious confidence in one’s resources or in the stability of earthly things]—these do not come from the Father, but are from the world.'
+  },
+  {
+    group: 'D', topic: 'Separate From the World', ref: 'Romans 12:2',
+    niv: 'Do not conform to the pattern of this world, but be transformed by the renewing of your mind. Then you will be able to test and approve what God’s will is—his good, pleasing and perfect will.',
+    kjv: 'And be not conformed to this world: but be ye transformed by the renewing of your mind, that ye may prove what is that good, and acceptable, and perfect, will of God.',
+    amp: 'And do not be conformed to this world [any longer with its superficial values and customs], but be transformed and progressively changed [as you mature spiritually] by the renewing of your mind [focusing on godly values and ethical attitudes], so that you may prove [for yourselves] what the will of God is, that which is good and acceptable and perfect [in His plan and purpose for you].'
+  },
+  {
+    group: 'D', topic: 'Be Steadfast', ref: '1 Corinthians 15:58',
+    niv: 'Therefore, my dear brothers and sisters, stand firm. Let nothing move you. Always give yourselves fully to the work of the Lord, because you know that your labor in the Lord is not in vain.',
+    kjv: 'Therefore, my beloved brethren, be ye stedfast, unmoveable, always abounding in the work of the Lord, forasmuch as ye know that your labour is not in vain in the Lord.',
+    amp: 'Therefore, my beloved brothers and sisters, be firm, steadfast, immovable, always excelling in the work of the Lord [always doing your best and doing more than is needed], being continually aware that your labor [even to the point of exhaustion] in the Lord is not futile nor wasted [it is never without purpose].'
+  },
+  {
+    group: 'D', topic: 'Be Steadfast', ref: 'Hebrews 12:3',
+    niv: 'Consider him who endured such opposition from sinners, so that you will not grow weary and lose heart.',
+    kjv: 'For consider him that endured such contradiction of sinners against himself, lest ye be wearied and faint in your minds.',
+    amp: 'Just consider and meditate on Him who endured from sinners such bitter hostility against Himself [consider it all in comparison with your trials], so that you will not grow weary and lose heart.'
+  },
+  {
+    group: 'D', topic: 'Serve Others', ref: 'Mark 10:45',
+    niv: 'For even the Son of Man did not come to be served, but to serve, and to give his life as a ransom for many.',
+    kjv: 'For even the Son of man came not to be ministered unto, but to minister, and to give his life a ransom for many.',
+    amp: 'For even the Son of Man did not come to be served, but to serve, and to give His life as a ransom for many.”'
+  },
+  {
+    group: 'D', topic: 'Serve Others', ref: '2 Corinthians 4:5',
+    niv: 'For what we preach is not ourselves, but Jesus Christ as Lord, and ourselves as your servants for Jesus’ sake.',
+    kjv: 'For we preach not ourselves, but Christ Jesus the Lord; and ourselves your servants for Jesus\' sake.',
+    amp: 'For we do not preach ourselves, but Jesus Christ as Lord, and ourselves [merely] as your bond-servants for Jesus’ sake.'
+  },
+  {
+    group: 'D', topic: 'Give Generously', ref: 'Proverbs 3:9,10',
+    niv: 'Honor the Lord with your wealth, with the firstfruits of all your crops; then your barns will be filled to overflowing, and your vats will brim over with new wine.',
+    kjv: 'Honour the Lord with thy substance, and with the firstfruits of all thine increase: So shall thy barns be filled with plenty, and thy presses shall burst out with new wine.',
+    amp: 'Honor the Lord with your wealth and with the first fruits of all your crops (income); then your barns will be abundantly filled and your vats will overflow with new wine.'
+  },
+  {
+    group: 'D', topic: 'Give Generously', ref: '2 Corinthians 9:6,7',
+    niv: 'Remember this: Whoever sows sparingly will also reap sparingly, and whoever sows generously will also reap generously. Each of you should give what you have decided in your heart to give, not reluctantly or under compulsion, for God loves a cheerful giver.',
+    kjv: 'But this I say, He which soweth sparingly shall reap also sparingly; and he which soweth bountifully shall reap also bountifully. Every man according as he purposeth in his heart, so let him give; not grudgingly, or of necessity: for God loveth a cheerful giver.',
+    amp: 'Now [remember] this: he who sows sparingly will also reap sparingly, and he who sows generously [that blessings may come to others] will also reap generously [and be blessed]. Let each one give [thoughtfully and with purpose] just as he has decided in his heart, not grudgingly or under compulsion, for God loves a giver whose heart is in his gift.'
+  },
+  {
+    group: 'D', topic: 'Develop World Vision', ref: 'Acts 1:8',
+    niv: 'But you will receive power when the Holy Spirit comes on you; and you will be my witnesses in Jerusalem, and in all Judea and Samaria, and to the ends of the earth.',
+    kjv: 'But ye shall receive power, after that the Holy Ghost is come upon you: and ye shall be witnesses unto me both in Jerusalem, and in all Judaea, and in Samaria, and unto the uttermost part of the earth.',
+    amp: 'But you will receive power and ability when the Holy Spirit comes upon you; and you will be My witnesses [to tell people about Me] both in Jerusalem and in all Judea, and Samaria, and even to the ends of the earth.”'
+  },
+  {
+    group: 'D', topic: 'Develop World Vision', ref: 'Matthew 28:19,20',
+    niv: 'Therefore go and make disciples of all nations, baptizing them in the name of the Father and of the Son and of the Holy Spirit, and teaching them to obey everything I have commanded you. And surely I am with you always, to the very end of the age.',
+    kjv: 'Go ye therefore, and teach all nations, baptizing them in the name of the Father, and of the Son, and of the Holy Ghost: Teaching them to observe all things whatsoever I have commanded you: and, lo, I am with you alway, even unto the end of the world. Amen.',
+    amp: 'Go therefore and make disciples of all the nations [help the people to learn of Me, believe in Me, and obey My words], baptizing them in the name of the Father and of the Son and of the Holy Spirit, teaching them to observe everything that I have commanded you; and lo, I am with you always [remaining with you perpetually—regardless of circumstance, and on every occasion], even to the end of the age.”'
+  },
 
-  // E: Growth In Christlikeness
-  { group: 'E', topic: 'Love', ref: 'John 13:34,35', text: '“A new command I give you: Love one another. As I have loved you, so you must love one another. By this everyone will know that you are my disciples, if you love one another.”' },
-  { group: 'E', topic: 'Love', ref: '1 John 3:18', text: 'Dear children, let us not love with words or speech but with actions and in truth.' },
-  { group: 'E', topic: 'Humility', ref: 'Philippians 2:3,4', text: 'Do nothing out of selfish ambition or vain conceit. Rather, in humility value others above yourselves, not looking to your own interests but each of you to the interests of the others.' },
-  { group: 'E', topic: 'Humility', ref: '1 Peter 5:5,6', text: 'In the same way, you who are younger, submit yourselves to your elders. All of you, clothe yourselves with humility toward one another, because, “God opposes the proud but shows favor to the humble.” Humble yourselves, therefore, under God’s mighty hand, that he may lift you up in due time.' },
-  { group: 'E', topic: 'Purity', ref: 'Ephesians 5:3', text: 'But among you there must not be even a hint of sexual immorality, or of any kind of impurity, or of greed, because these are improper for God’s holy people.' },
-  { group: 'E', topic: 'Purity', ref: '1 Peter 2:11', text: 'Dear friends, I urge you, as foreigners and exiles, to abstain from sinful desires, which wage war against your soul.' },
-  { group: 'E', topic: 'Honesty', ref: 'Leviticus 19:11', text: '“‘Do not steal. “‘Do not lie. “‘Do not deceive one another.' },
-  { group: 'E', topic: 'Honesty', ref: 'Acts 24:16', text: 'So I strive always to keep my conscience clear before God and man.' },
-  { group: 'E', topic: 'Faith', ref: 'Hebrews 11:6', text: 'And without faith it is impossible to please God, because anyone who comes to him must believe that he exists and that he rewards those who earnestly seek him.' },
-  { group: 'E', topic: 'Faith', ref: 'Romans 4:20,21', text: 'Yet he did not waver through unbelief regarding the promise of God, but was strengthened in his faith and gave glory to God, being fully persuaded that God had power to do what he had promised.' },
-  { group: 'E', topic: 'Good Works', ref: 'Galatians 6:9,10', text: 'Let us not become weary in doing good, for at the proper time we will reap a harvest if we do not give up. Therefore, as we have opportunity, let us do good to all people, especially to those who belong to the family of believers.' },
-  { group: 'E', topic: 'Good Works', ref: 'Matthew 5:16', text: 'In the same way, let your light shine before others, that they may see your good deeds and glorify your Father in heaven.' }
+  // === E: Growth In Christlikeness ===
+  {
+    group: 'E', topic: 'Love', ref: 'John 13:34,35',
+    niv: '“A new command I give you: Love one another. As I have loved you, so you must love one another. By this everyone will know that you are my disciples, if you love one another.”',
+    kjv: 'A new commandment I give unto you, That ye love one another; as I have loved you, that ye also love one another. By this shall all men know that ye are my disciples, if ye have love one to another.',
+    amp: 'I am giving you a new commandment, that you love one another. Just as I have loved you, so you too are to love one another. By this everyone will know that you are My disciples, if you have love and unselfish concern for one another.”'
+  },
+  {
+    group: 'E', topic: 'Love', ref: '1 John 3:18',
+    niv: 'Dear children, let us not love with words or speech but with actions and in truth.',
+    kjv: 'My little children, let us not love in word, neither in tongue; but in deed and in truth.',
+    amp: 'Little children (believers, dear ones), let us not love [merely in theory] with word or with tongue [giving lip service to compassion], but in action and in truth [in practice and in sincerity, because practical acts of love are more than words].'
+  },
+  {
+    group: 'E', topic: 'Humility', ref: 'Philippians 2:3,4',
+    niv: 'Do nothing out of selfish ambition or vain conceit. Rather, in humility value others above yourselves, not looking to your own interests but each of you to the interests of the others.',
+    kjv: 'Let nothing be done through strife or vainglory; but in lowliness of mind let each esteem other better than themselves. Look not every man on his own things, but every man also on the things of others.',
+    amp: 'Do nothing from selfishness or empty conceit [through factional motives, or strife], but with [an attitude of] humility [being neither arrogant nor self-righteous], regard others as more important than yourselves. Do not merely look out for your own personal interests, but also for the interests of others.'
+  },
+  {
+    group: 'E', topic: 'Humility', ref: '1 Peter 5:5,6',
+    niv: 'In the same way, you who are younger, submit yourselves to your elders. All of you, clothe yourselves with humility toward one another, because, “God opposes the proud but shows favor to the humble.” Humble yourselves, therefore, under God’s mighty hand, that he may lift you up in due time.',
+    kjv: 'Likewise, ye younger, submit yourselves unto the elder. Yea, all of you be subject one to another, and be clothed with humility: for God resisteth the proud, and giveth grace to the humble. Humble yourselves therefore under the mighty hand of God, that he may exalt you in due time:',
+    amp: 'Likewise, you younger men [of lesser rank and experience], be subject to your elders [seek their counsel]; and all of you, clothe yourselves with humility toward one another [tie on the servant’s apron], for God is opposed to the proud [the disdainful, the presumptuous, and He defeats them], but He gives grace to the humble. Therefore humble yourselves under the mighty hand of God [set aside self-righteous pride], so that He may exalt you [to a place of honor in His service] at the appropriate time,'
+  },
+  {
+    group: 'E', topic: 'Purity', ref: 'Ephesians 5:3',
+    niv: 'But among you there must not be even a hint of sexual immorality, or of any kind of impurity, or of greed, because these are improper for God’s holy people.',
+    kjv: 'But fornication, and all uncleanness, or covetousness, let it not be once named among you, as becometh saints;',
+    amp: 'But sexual immorality and all [moral] impurity [indecent, offensive behavior] or greed must not even be hinted at among you, as is proper among saints [for as believers our way of life, whether in public or in private, reflects the validity of our faith].'
+  },
+  {
+    group: 'E', topic: 'Purity', ref: '1 Peter 2:11',
+    niv: 'Dear friends, I urge you, as foreigners and exiles, to abstain from sinful desires, which wage war against your soul.',
+    kjv: 'Dearly beloved, I beseech you as strangers and pilgrims, abstain from fleshly lusts, which war against the soul;',
+    amp: 'Beloved, I urge you as aliens and strangers [in this world] to abstain from the sensual urges [those degrading appetites] that wage war against the soul,'
+  },
+  {
+    group: 'E', topic: 'Honesty', ref: 'Leviticus 19:11',
+    niv: '“‘Do not steal. “‘Do not lie. “‘Do not deceive one another.',
+    kjv: 'Ye shall not steal, neither deal falsely, neither lie one to another.',
+    amp: '‘You shall not steal, nor deal deceptively, nor lie to one another.'
+  },
+  {
+    group: 'E', topic: 'Honesty', ref: 'Acts 24:16',
+    niv: 'So I strive always to keep my conscientious clear before God and man.',
+    kjv: 'And herein do I exercise myself, to have always a conscience void of offence toward God, and toward men.',
+    amp: 'In view of this, I also do my best and strive always to have a clear conscience before God and before men.'
+  },
+  {
+    group: 'E', topic: 'Faith', ref: 'Hebrews 11:6',
+    niv: 'And without faith it is impossible to please God, because anyone who comes to him must believe that he exists and that he rewards those who earnestly seek him.',
+    kjv: 'But without faith it is impossible to please him: for he that cometh to God must believe that he is, and that he is a rewarder of them that diligently seek him.',
+    amp: 'But without faith it is impossible to [walk with God and] please Him, for whoever comes [near] to God must [necessarily] believe that God exists and that He rewards those who [earnestly and diligently] seek Him.'
+  },
+  {
+    group: 'E', topic: 'Faith', ref: 'Romans 4:20,21',
+    niv: 'Yet he did not waver through unbelief regarding the promise of God, but was strengthened in his faith and gave glory to God, being fully persuaded that God had power to do what he had promised.',
+    kjv: 'He staggered not at the promise of God through unbelief; but was strong in faith, giving glory to God; And being fully persuaded that, what he had promised, he was able also to perform.',
+    amp: 'But he did not doubt or waver in unbelief concerning the promise of God, but he grew strong and empowered by faith, giving glory to God, being fully convinced that God had the power to do what He had promised.'
+  },
+  {
+    group: 'E', topic: 'Good Works', ref: 'Galatians 6:9,10',
+    niv: 'Let us not become weary in doing good, for at the proper time we will reap a harvest if we do not give up. Therefore, as we have opportunity, let us do good to all people, especially to those who belong to the family of believers.',
+    kjv: 'And let us not be weary in well doing: for in due season we shall reap, if we faint not. As we have therefore opportunity, let us do good unto all men, especially unto them who are of the household of faith.',
+    amp: 'Let us not grow weary or become discouraged in doing good, for at the proper time we will reap, if we do not give in. So then, while we [as individual believers] have the opportunity, let us do good to all people [not only being helpful, but also doing good deeds], especially to the family of believers [those of the household of faith].'
+  },
+  {
+    group: 'E', topic: 'Good Works', ref: 'Matthew 5:16',
+    niv: 'In the same way, let your light shine before others, that they may see your good deeds and glorify your Father in heaven.',
+    kjv: 'Let your light so shine before men, that they may see your good works, and glorify your Father which is in heaven.',
+    amp: 'Let your light shine before men in such a way that they may see your good deeds and moral excellence, and [recognize and honor and] glorify your Father who is in heaven.'
+  }
 ];
+
 const grid = document.getElementById('grid');
 const groupSelect = document.getElementById('groupSelect');
+const versionSelect = document.getElementById('versionSelect');
 const searchInput = document.getElementById('search');
 const resetBtn = document.getElementById('reset');
+
+let currentVersion = 'niv';
+
+function getVerseText(verse) {
+  return verse[currentVersion] || verse.niv;
+}
+
 function renderCards(list) {
   grid.innerHTML = '';
-  list.forEach((v, i) => {
+  list.forEach(v => {
     const wrap = document.createElement('div');
     wrap.className = 'card-wrap';
     const card = document.createElement('div');
@@ -263,7 +579,7 @@ function renderCards(list) {
       <div class="card-side back">
         <div>
           <strong>${v.ref}</strong>
-          <div class="verse">${v.text}</div>
+          <div class="verse">${getVerseText(v)}</div>
         </div>
       </div>
     `;
@@ -272,17 +588,40 @@ function renderCards(list) {
     grid.appendChild(wrap);
   });
 }
+
 function filterCards() {
   const group = groupSelect.value;
   const query = searchInput.value.toLowerCase();
   let filtered = scriptures;
+
   if (group !== 'all') filtered = filtered.filter(s => s.group === group);
-  if (query) filtered = filtered.filter(s => s.topic.toLowerCase().includes(query) || s.ref.toLowerCase().includes(query) || s.text.toLowerCase().includes(query));
+  if (query) {
+    filtered = filtered.filter(s => 
+      s.topic.toLowerCase().includes(query) || 
+      s.ref.toLowerCase().includes(query) || 
+      getVerseText(s).toLowerCase().includes(query)
+    );
+  }
+
   renderCards(filtered);
 }
+
+// Event Listeners
 groupSelect.addEventListener('change', filterCards);
+versionSelect.addEventListener('change', () => {
+  currentVersion = versionSelect.value;
+  filterCards();
+});
 searchInput.addEventListener('input', filterCards);
-resetBtn.addEventListener('click', () => { groupSelect.value = 'all'; searchInput.value = ''; renderCards(scriptures); });
+resetBtn.addEventListener('click', () => {
+  groupSelect.value = 'all';
+  versionSelect.value = 'niv';
+  currentVersion = 'niv';
+  searchInput.value = '';
+  renderCards(scriptures);
+});
+
+// Initial render
 renderCards(scriptures);
 </script>
 </body>
